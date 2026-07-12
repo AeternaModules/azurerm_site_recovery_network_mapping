@@ -1,3 +1,7 @@
+output "site_recovery_network_mappings_id" {
+  description = "Map of id values across all site_recovery_network_mappings, keyed the same as var.site_recovery_network_mappings"
+  value       = { for k, v in azurerm_site_recovery_network_mapping.site_recovery_network_mappings : k => v.id }
+}
 output "site_recovery_network_mappings_name" {
   description = "Map of name values across all site_recovery_network_mappings, keyed the same as var.site_recovery_network_mappings"
   value       = { for k, v in azurerm_site_recovery_network_mapping.site_recovery_network_mappings : k => v.name }

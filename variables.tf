@@ -20,34 +20,13 @@ EOT
     target_network_id           = string
     target_recovery_fabric_name = string
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.site_recovery_network_mappings : (
-        length(v.name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.site_recovery_network_mappings : (
-        length(v.source_recovery_fabric_name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.site_recovery_network_mappings : (
-        length(v.target_recovery_fabric_name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_site_recovery_network_mapping's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
   # Review, translate into a real validation{} block above, and delete once confirmed.
+  # path: name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: resource_group_name
   #   condition: length(value) <= 90
   #   message:   [from resourcegroups.ValidateName: invalid when len(value) > 90]
@@ -64,6 +43,12 @@ EOT
   #   source:    [from resourcegroups.ValidateName] !matched
   # path: recovery_vault_name
   #   source:    validate.RecoveryServicesVaultName: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: source_recovery_fabric_name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: target_recovery_fabric_name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: source_network_id
   #   source:    [from azure.ValidateResourceID] !ok
   # path: source_network_id
